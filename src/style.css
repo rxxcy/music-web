@@ -1,0 +1,72 @@
+@font-face {
+  font-family: 'OPPOSans';
+  src: url(https://www.oppo.com/content/dam/statics/fonts/cn/OPPOSans3.0cn-Bold.woff2)
+      format('woff2'),
+    url(https://www.oppo.com/content/dam/statics/fonts/cn/OPPOSans3.0cn-Bold.woff)
+      format('woff'),
+    url(https://www.oppo.com/content/dam/statics/fonts/cn/OPPOSans3.0cn-Bold.ttf)
+      format('truetype');
+  font-variation-settings: 'wght' 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'OPPOSans';
+  src: url(https://www.oppo.com/content/dam/statics/fonts/cn/OPPOSans3.0cn-Medium.woff2)
+      format('woff2'),
+    url(https://www.oppo.com/content/dam/statics/fonts/cn/OPPOSans3.0cn-Medium.woff)
+      format('woff'),
+    url(https://www.oppo.com/content/dam/statics/fonts/cn/OPPOSans3.0cn-Medium.ttf)
+      format('truetype');
+  font-variation-settings: 'wght' 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'OPPOSans';
+  src: url(https://www.oppo.com/content/dam/statics/fonts/cn/OPPOSans3.0cn-Regular.woff2)
+      format('woff2'),
+    url(https://www.oppo.com/content/dam/statics/fonts/cn/OPPOSans3.0cn-Regular.woff)
+      format('woff'),
+    url(https://www.oppo.com/content/dam/statics/fonts/cn/OPPOSans3.0cn-Regular.ttf)
+      format('truetype');
+  font-variation-settings: 'wght' 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* @font-face {
+  font-family: 'VIVO';
+  src: url('https://wwwstatic.vivo.com.cn/vivoportal/files/image/font/20240910/25338b95f06795ccf1d2579b4e997b37.woff2')
+      format('woff2'),
+    url('https://wwwstatic.vivo.com.cn/vivoportal/files/image/font/20240910/2794ebe855e77dea7cdc0daedb4726ea.eot')
+      format('embedded-opentype'),
+    url('https://wwwstatic.vivo.com.cn/vivoportal/files/image/font/20240910/c7b304cddbbeb05549f0a05b09806497.woff')
+      format('woff'),
+    url('https://wwwstatic.vivo.com.cn/vivoportal/files/image/font/20240910/b2a6908bdc1d92449629bf22669c8fc9.ttf')
+      format('truetype'),
+    url('https://wwwstatic.vivo.com.cn/vivoportal/files/image/font/20240910/63e1336024a6f42eed18afe9f90231ca.svg')
+      format('svg');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'VIVO';
+  src: url('https://wwwstatic.vivo.com.cn/vivoportal/files/image/font/20240910/a3b2f702babc3f88fea626c07f52c3d3.woff2')
+      format('woff2'),
+    url('https://wwwstatic.vivo.com.cn/vivoportal/files/image/font/20240910/9fd2bd182ccba2ea6e846c03535bd2a9.eot')
+      format('embedded-opentype'),
+    url('https://wwwstatic.vivo.com.cn/vivoportal/files/image/font/20240910/f13c2fc11315e24bb62f806369623047.woff')
+      format('woff'),
+    url('https://wwwstatic.vivo.com.cn/vivoportal/files/image/font/20240910/fe23482223789537b0710b9180562f95.ttf')
+      format('truetype'),
+    url('https://wwwstatic.vivo.com.cn/vivoportal/files/image/font/20240910/8cee888e350a11063b085aff77815a73.svg')
+      format('svg');
+  font-display: swap;
+} */
+
+html,
+body {
+  font-family: 'OPPOSans';
+}
