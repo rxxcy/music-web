@@ -5,7 +5,8 @@ import { useUserStore } from './store/modules/user'
 
 onMounted(() => {
   const token = localStorage.getItem('token')
-  if (token) useUserStore().setToken(token)
+  const stoer = useUserStore()
+  if (token) stoer.setToken(token)
 })
 </script>
 

@@ -1,5 +1,4 @@
 <template>
-  <n-switch v-model:value="collapsed" />
   <n-layout has-sider>
     <n-layout-sider
       bordered
@@ -10,30 +9,55 @@
       show-trigger
       @collapse="collapsed = true"
       @expand="collapsed = false"
+      :content-style="{
+        height: '100vh',
+      }"
     >
-      <n-menu
-        v-model:value="activeKey"
-        :collapsed="collapsed"
-        :collapsed-width="64"
-        :collapsed-icon-size="22"
-        :options="menuOptions"
-      />
+      <div class="flex flex-col">
+        <div
+          class="bg-white h-59px flex justify-center items-center overflow-hidden"
+        >
+          <a class="text-black decoration-none" href="/">
+            <b>{{ collapsed ? 'FM' : 'FreeMusic' }}</b>
+            <span class="hidden">自由的音乐</span>
+          </a>
+        </div>
+        <n-scrollbar style="height: calc(100vh - 110px)">
+          <n-menu
+            v-model:value="activeKey"
+            :collapsed="collapsed"
+            :collapsed-width="64"
+            :collapsed-icon-size="22"
+            :options="menuOptions"
+          />
+        </n-scrollbar>
+        <div class="pt-2 bg-gray-1 h-43px">
+          <user-info :collapsed="collapsed" />
+        </div>
+      </div>
     </n-layout-sider>
     <n-layout>
-      <router-view />
+      <n-layout-header>
+        <app-header />
+      </n-layout-header>
+      <n-layout-content>
+        <main class="p-3">
+          <n-scrollbar style="max-height: calc(100vh - 300px)">
+            <router-view />
+          </n-scrollbar>
+        </main>
+      </n-layout-content>
     </n-layout>
   </n-layout>
 </template>
 
 <script setup lang="ts">
+import AppHeader from './components/Header.vue'
+import UserInfo from './components/UserInfo.vue'
 import { h, ref } from 'vue'
 import type { MenuOption } from 'naive-ui'
 import type { Component } from 'vue'
-import {
-  BookOutline as BookIcon,
-  PersonOutline as PersonIcon,
-  WineOutline as WineIcon,
-} from '@vicons/ionicons5'
+import { BookOutline } from '@vicons/ionicons5'
 import { NIcon } from 'naive-ui'
 // import { router } from '~/router'
 
@@ -45,74 +69,12 @@ const menuOptions: MenuOption[] = [
   {
     label: '且听风吟',
     key: 'hear-the-wind-sing',
-    icon: renderIcon(BookIcon),
+    icon: renderIcon(BookOutline),
   },
   {
     label: '1973年的弹珠玩具',
     key: 'pinball-1973',
-    icon: renderIcon(BookIcon),
-    disabled: true,
-    children: [
-      {
-        label: '鼠',
-        key: 'rat',
-      },
-    ],
-  },
-  {
-    label: '寻羊冒险记',
-    key: 'a-wild-sheep-chase',
-    disabled: true,
-    icon: renderIcon(BookIcon),
-  },
-  {
-    label: '舞，舞，舞',
-    key: 'dance-dance-dance',
-    icon: renderIcon(BookIcon),
-    children: [
-      {
-        type: 'group',
-        label: '人物',
-        key: 'people',
-        children: [
-          {
-            label: '叙事者',
-            key: 'narrator',
-            icon: renderIcon(PersonIcon),
-          },
-          {
-            label: '羊男',
-            key: 'sheep-man',
-            icon: renderIcon(PersonIcon),
-          },
-        ],
-      },
-      {
-        label: '饮品',
-        key: 'beverage',
-        icon: renderIcon(WineIcon),
-        children: [
-          {
-            label: '威士忌',
-            key: 'whisky',
-          },
-        ],
-      },
-      {
-        label: '食物',
-        key: 'food',
-        children: [
-          {
-            label: '三明治',
-            key: 'sandwich',
-          },
-        ],
-      },
-      {
-        label: '过去增多，未来减少',
-        key: 'the-past-increases-the-future-recedes',
-      },
-    ],
+    icon: renderIcon(BookOutline),
   },
 ]
 
