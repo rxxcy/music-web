@@ -54,12 +54,13 @@
 <script setup lang="ts">
 import AppHeader from './components/Header.vue'
 import UserInfo from './components/UserInfo.vue'
-import { h, ref } from 'vue'
+import { h, ref, watch } from 'vue'
 import type { MenuOption } from 'naive-ui'
 import type { Component } from 'vue'
-import { BookOutline } from '@vicons/ionicons5'
+import { ApertureOutline, CloudOutline, AlbumsOutline } from '@vicons/ionicons5'
 import { NIcon } from 'naive-ui'
-// import { router } from '~/router'
+import { RouterLink } from 'vue-router'
+import { router } from '~/router'
 
 function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) })
@@ -67,17 +68,59 @@ function renderIcon(icon: Component) {
 
 const menuOptions: MenuOption[] = [
   {
-    label: '且听风吟',
-    key: 'hear-the-wind-sing',
-    icon: renderIcon(BookOutline),
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: {
+            name: 'home',
+          },
+        },
+        { default: () => '探索' }
+      ),
+    key: 'home',
+    icon: renderIcon(ApertureOutline),
   },
   {
-    label: '1973年的弹珠玩具',
-    key: 'pinball-1973',
-    icon: renderIcon(BookOutline),
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: {
+            name: 'cloud',
+          },
+        },
+        { default: () => '云盘' }
+      ),
+    key: 'cloud',
+    icon: renderIcon(CloudOutline),
+  },
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: {
+            name: 'queue',
+          },
+        },
+        { default: () => '任务' }
+      ),
+    key: 'queue',
+    icon: renderIcon(AlbumsOutline),
   },
 ]
 
 const activeKey = ref<string | null>(null)
 const collapsed = ref(true)
+
+watch(
+  () => router.currentRoute.value.name,
+  name => {
+    activeKey.value = name as string
+  },
+  {
+    immediate: true,
+  }
+)
 </script>

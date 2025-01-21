@@ -8,19 +8,29 @@ import BaseLayout from '~/layout/BaseLayout.vue'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'Home',
+    name: 'Base',
     component: BaseLayout,
     children: [
       {
         path: '/',
-        name: 'dd',
+        name: 'home',
         component: () => import('~/views/index.vue'),
+      },
+      {
+        path: '/cloud',
+        name: 'cloud',
+        component: () => import('~/views/cloud.vue'),
+      },
+      {
+        path: '/queue',
+        name: 'queue',
+        component: () => import('~/views/queue.vue'),
       },
     ],
   },
   {
     path: '/login',
-    name: 'Login',
+    name: 'login',
     component: () => import('~/views/login.vue'),
   },
 ]

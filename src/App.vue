@@ -11,9 +11,11 @@ onMounted(() => {
 </script>
 
 <template>
+  <!-- <keep-alive> -->
   <n-provider>
     <router-view />
   </n-provider>
+  <!-- </keep-alive> -->
 </template>
 
 <style></style>
