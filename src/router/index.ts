@@ -41,22 +41,29 @@ export const router = createRouter({
 })
 
 router.beforeEach((to, _from, next) => {
+  window?.$loadingBar?.start()
   const token = window.localStorage.getItem('token')
-  if (to.name === 'Login') {
-    if (token) {
-      next({ name: 'Home' })
-      return
-    } else {
-      next()
-      return
-    }
-  } else {
-    if (token) {
-      next()
-      return
-    } else {
-      next({ name: 'Login' })
-      return
-    }
-  }
+  // if (to.name === 'Login') {
+  //   if (token) {
+  //     next({ name: 'Home' })
+  //     return
+  //   } else {
+  //     next()
+  //     return
+  //   }
+  // } else {
+  //   if (token) {
+  //     next()
+  //     return
+  //   } else {
+  //     next({ name: 'Login' })
+  //     return
+  //   }
+  // }
+  if (to.name !== 'login' && !token) next({ name: 'login' })
+  else next()
+})
+
+router.afterEach(() => {
+  window?.$loadingBar?.finish()
 })

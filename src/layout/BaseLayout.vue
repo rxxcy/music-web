@@ -42,7 +42,7 @@
       </n-layout-header>
       <n-layout-content>
         <main class="p-3">
-          <n-scrollbar style="max-height: calc(100vh - 300px)">
+          <n-scrollbar style="min-height: calc(100vh - 86px)">
             <router-view />
           </n-scrollbar>
         </main>
@@ -116,7 +116,7 @@ const collapsed = ref(true)
 
 watch(
   () => router.currentRoute.value.name,
-  name => {
+  (name) => {
     activeKey.value = name as string
   },
   {
