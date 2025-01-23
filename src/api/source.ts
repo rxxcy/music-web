@@ -1,4 +1,4 @@
-import type { MusicItem } from '~/iterface/kuwo'
+import type { MusicItem } from '~/interface/kuwo'
 import { axios } from '~/utils/axios'
 
 export interface SearchParams {
@@ -6,6 +6,12 @@ export interface SearchParams {
   keyword: string
   page: number
   limit: number
+}
+
+export interface UrlParams {
+  platform: string
+  id: number
+  quality: string
 }
 
 export interface Platfrom {
@@ -21,6 +27,22 @@ export const platform = () => {
 export const search = (params: SearchParams) => {
   return axios<{ rows: MusicItem[]; total: number }>({
     url: '/source/search',
+    params,
+  })
+}
+
+interface UrlResponse {
+  format: string
+  bitrate: string
+  url: string
+  sig: string
+  rid: string
+  type: string
+}
+
+export const url = (params: UrlParams) => {
+  return axios<UrlResponse>({
+    url: '/source/url',
     params,
   })
 }

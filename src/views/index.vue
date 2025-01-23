@@ -33,7 +33,14 @@
         @load="handleLoadMore"
       >
         <div class="space-y-1 w-4xl mx-auto">
-          <song-item v-for="song in song.rows" :key="song.id" :song="song" />
+          <song-item
+            v-for="song in song.rows"
+            :key="song.id"
+            :song="song"
+            @play="handlePlay"
+            @teleport="handleTeleport"
+            @download="handleDownload"
+          />
         </div>
         <n-back-top :right="100" />
         <div v-if="isLoading" class="text-center py-2">加载中...</div>
@@ -44,16 +51,17 @@
 </template>
 
 <script lang="ts" setup>
-import SongItem from '~/layout/components/Song.vue'
+import SongItem from '~/components/Song.vue'
 import { FlashOutline } from '@vicons/ionicons5'
 import { computed, onMounted, reactive, ref } from 'vue'
 import {
   platform,
   search,
+  url,
   type Platfrom,
   type SearchParams,
 } from '~/api/source'
-import type { MusicItem } from '~/iterface/kuwo'
+import type { MusicItem } from '~/interface/kuwo'
 import { useAppStore } from '~/store'
 
 const appStore = useAppStore()
@@ -315,6 +323,25 @@ const serachSong = async () => {
   if (song.rows.length >= total) noMore.value = true
   appStore.setIsLoading()
 }
+
+const handlePlay = (id: number) => {
+  console.log('🚀 ~ handlePlay ~ id:', id)
+}
+
+const handleTeleport = (id: number) => {
+  console.log('🚀 ~ handleTeleport ~ id:', id)
+}
+
+const handleDownload = async (id: number, quality: string) => {
+  appStore.setIsLoading()
+  const res = await url({ platform: params.platform, id, quality })
+  const { url: songUrl } = res.data
+  if (songUrl) {
+    window.open(songUrl, '_blank')
+  }
+  appStore.setIsLoading()
+}
+
 onMounted(() => {
   handleGetSource()
 })

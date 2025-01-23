@@ -3,6 +3,8 @@ import Axios, {
   type AxiosResponse,
   type AxiosError,
 } from 'axios'
+import { pinia } from '~/store'
+import { useAppStore } from '~/store'
 
 export const axios = Axios.create({
   baseURL: 'http://localhost:3090',
@@ -30,6 +32,7 @@ axios.interceptors.request.use(
   },
   (error: AxiosError) => {
     // 处理请求错误
+    useAppStore(pinia).setIsLoading(false)
     return Promise.reject(error)
   }
 )
@@ -45,7 +48,9 @@ axios.interceptors.response.use(
   },
   (error: AxiosError) => {
     // 处理响应错误
+    useAppStore(pinia).setIsLoading(false)
     console.log('响应拦截器处理错误', error)
+    window?.$loadingBar?.error()
     return Promise.reject(error)
   }
 )

@@ -7,7 +7,8 @@ export const useAppStore = defineStore('app', {
     isLoading: false,
   }),
   actions: {
-    setIsLoading() {
+    setIsLoading(value?: boolean) {
+      if (value !== undefined) return (this.isLoading = value)
       this.isLoading = !this.isLoading
     },
   },
