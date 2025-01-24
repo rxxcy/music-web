@@ -1,6 +1,6 @@
 export interface Quality {
   level: string
-  bitrate: string
+  bitrate: number
   format: string
   size: string
 }

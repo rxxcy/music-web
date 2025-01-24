@@ -1,6 +1,12 @@
 <template>
   <article class="flex gap-8 items-center py-2 px-4 rounded hover:bg-green-1">
-    <n-image width="40" :src="albumpic" class="rounded" preview-disabled>
+    <n-image
+      width="40"
+      :src="albumpic"
+      class="rounded h-40px"
+      object-fit="cover"
+      :preview-disabled="disabledPreview"
+    >
       <template #error>
         <n-icon :size="40" color="lightGrey">
           <ImageOutline />
@@ -27,7 +33,7 @@
             传送
           </n-button>
         </template>
-        默认顶级音质：{{ song.quality[0].format }} {{ song.quality[0].size }}
+        默认顶级音质：{{ qualitys[0].format }} {{ qualitys[0].size }}
       </n-tooltip>
       <n-dropdown
         trigger="click"
@@ -50,16 +56,21 @@ const emit = defineEmits(['play', 'teleport', 'download'])
 const imgHost = 'https://img2.kuwo.cn/star/albumcover/'
 interface Props {
   song: MusicItem
+  disabledPreview?: boolean
 }
 const props = defineProps<Props>()
-const { song } = toRefs(props)
+const { song, disabledPreview } = toRefs(props)
 
 const albumpic = computed(() => imgHost + song.value.albumpic)
 const duration = computed(() => secondsToMinutesSeconds(song.value.duration))
+const qualitys = computed(() => {
+  const qs = song.value.quality
+  return qs.sort((a, b) => b.bitrate - a.bitrate)
+})
 const downloadOptions = computed(() => {
-  return song.value.quality.map(item => {
+  return qualitys.value?.map((item) => {
     return {
-      label: `${item.format}  ->  ${item.size}`,
+      label: `${item.format} :  ${item.size}`,
       key: `${item.bitrate}${item.format}`,
     }
   })

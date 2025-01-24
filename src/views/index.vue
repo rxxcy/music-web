@@ -37,6 +37,7 @@
             v-for="song in song.rows"
             :key="song.id"
             :song="song"
+            :disabled-preview="disabledPicPreview"
             @play="handlePlay"
             @teleport="handleTeleport"
             @download="handleDownload"
@@ -65,6 +66,7 @@ import type { MusicItem } from '~/interface/kuwo'
 import { useAppStore } from '~/store'
 
 const appStore = useAppStore()
+const disabledPicPreview = computed(() => appStore.disabledPicPreview)
 const isLoading = computed(() => appStore.isLoading)
 const platfroms = ref<Platfrom['platform'] | null>(null)
 const params = reactive<SearchParams>({
@@ -86,37 +88,37 @@ const song = reactive<{ rows: MusicItem[]; total: number }>({
       quality: [
         {
           level: 'ff',
-          bitrate: '2000',
+          bitrate: 2000,
           format: 'flac',
           size: '31.86Mb',
         },
         {
           level: 'p',
-          bitrate: '320',
+          bitrate: 320,
           format: 'mp3',
           size: '9.85Mb',
         },
         {
           level: 's',
-          bitrate: '48',
+          bitrate: 48,
           format: 'aac',
           size: '1.47Mb',
         },
         {
           level: 'p',
-          bitrate: '192',
+          bitrate: 192,
           format: 'ogg',
           size: '6.10Mb',
         },
         {
           level: 'h',
-          bitrate: '100',
+          bitrate: 100,
           format: 'ogg',
           size: '2.98Mb',
         },
         {
           level: 'h',
-          bitrate: '128',
+          bitrate: 128,
           format: 'mp3',
           size: '3.94Mb',
         },
@@ -133,7 +135,7 @@ const song = reactive<{ rows: MusicItem[]; total: number }>({
       quality: [
         {
           level: 'ff',
-          bitrate: '2000',
+          bitrate: 2000,
           format: 'flac',
           size: '33.92Mb',
         },
