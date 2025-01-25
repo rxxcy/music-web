@@ -25,7 +25,11 @@
 
     <p class="m-0 text-coolGray">{{ duration }}</p>
 
-    <n-flex justify="space-between" class="flex-1 flex-shrink-0">
+    <n-flex
+      v-if="qualitys"
+      justify="space-between"
+      class="flex-1 flex-shrink-0"
+    >
       <n-button type="success" size="small" @click="handlePlay">试听</n-button>
       <n-tooltip trigger="hover">
         <template #trigger>
@@ -43,6 +47,7 @@
         <n-button type="info" size="small">下载</n-button>
       </n-dropdown>
     </n-flex>
+    <div v-else class="select-none">暂无音源</div>
   </article>
 </template>
 <script lang="ts" setup>
@@ -68,7 +73,7 @@ const qualitys = computed(() => {
   return qs.sort((a, b) => b.bitrate - a.bitrate)
 })
 const downloadOptions = computed(() => {
-  return qualitys.value?.map((item) => {
+  return qualitys.value?.map(item => {
     return {
       label: `${item.format} :  ${item.size}`,
       key: `${item.bitrate}${item.format}`,
@@ -76,7 +81,7 @@ const downloadOptions = computed(() => {
   })
 })
 
-const handlePlay = () => emit('play', song.value.id)
+const handlePlay = () => emit('play', song.value.id, '128mp3')
 const handleTeleport = () => emit('teleport', song.value.id)
 const handleDownload = (e: string) => emit('download', song.value.id, e)
 </script>

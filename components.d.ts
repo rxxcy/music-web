@@ -39,8 +39,9 @@ declare module 'vue' {
     NSpin: typeof import('naive-ui')['NSpin']
     NSwitch: typeof import('naive-ui')['NSwitch']
     NTooltip: typeof import('naive-ui')['NTooltip']
+    Palyer: typeof import('./src/components/palyer.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    Song: typeof import('./src/components/Song.vue')['default']
+    Song: typeof import('./src/components/song.vue')['default']
   }
 }

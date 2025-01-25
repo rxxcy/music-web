@@ -28,7 +28,7 @@ export default defineConfig({
     }),
   ],
   server: {
-    port: 17003,
+    port: 3000,
   },
   resolve: {
     alias: {

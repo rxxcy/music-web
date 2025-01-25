@@ -44,6 +44,7 @@
         <main class="p-3">
           <n-scrollbar style="min-height: calc(100vh - 86px)">
             <router-view />
+            <Player />
           </n-scrollbar>
         </main>
       </n-layout-content>
@@ -54,6 +55,7 @@
 <script setup lang="ts">
 import AppHeader from './components/Header.vue'
 import UserInfo from './components/UserInfo.vue'
+import Player from '~/components/palyer.vue'
 import { h, ref, watch } from 'vue'
 import type { MenuOption } from 'naive-ui'
 import type { Component } from 'vue'
@@ -116,7 +118,7 @@ const collapsed = ref(true)
 
 watch(
   () => router.currentRoute.value.name,
-  (name) => {
+  name => {
     activeKey.value = name as string
   },
   {
