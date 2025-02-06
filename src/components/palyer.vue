@@ -15,13 +15,13 @@ const playlist = ref<Song[]>([
     title: 'Song 1',
     artist: 'Artist 1',
     duration: 180,
-    url: 'http://lv.sycdn.kuwo.cn/70a6142f991041445a6af11a6ac016aa/67948010/resource/30106/trackmedia/M800000HY8ha2kgK2l.mp3?bitrate$320&format$mp3&source$kwplayer_ar_5.1.0.0_B_jiakong_vh.apk&type$convert_url2',
+    url: 'http://lw.sycdn.kuwo.cn/c592f66577f758a9fa74b4797d61dde1/67a4c1c2/resource/30106/trackmedia/M800003ZQREs39AMVp.mp3?bitrate$320&format$mp3&source$kwplayer_ar_5.1.0.0_B_jiakong_vh.apk&type$convert_url2',
   },
   {
     title: 'Song 2',
     artist: 'Artist 2',
     duration: 200,
-    url: 'http://lw.sycdn.kuwo.cn/a5d4ada1972812b525ce181e6f59bf0f/67948031/resource/30106/trackmedia/M500003ZQREs39AMVp.mp3?bitrate$128&format$mp3&source$kwplayer_ar_5.1.0.0_B_jiakong_vh.apk&type$convert_url2',
+    url: 'http://lw.sycdn.kuwo.cn/563e1f7aea918a08ee2ee56f845ee0b1/67a4c1d8/resource/30106/trackmedia/M800000rpxPq4ED1E4.mp3?bitrate$320&format$mp3&source$kwplayer_ar_5.1.0.0_B_jiakong_vh.apk&type$convert_url2',
   },
 ])
 
@@ -81,26 +81,26 @@ const onProgressChange = (value: number) => {
 </script>
 
 <template>
-  <div class="player">
+  <div class="player pos-fixed bottom-0 left-0 right-0">
     <div class="info">
       <div class="title">{{ currentSong.title }}</div>
       <div class="artist">{{ currentSong.artist }}</div>
     </div>
     <div class="controls">
-      <NButton size="small" @click="prevSong">
-        <NIcon><Pause /></NIcon>
-      </NButton>
-      <NButton size="small" @click="playPause">
-        <NIcon v-if="isPlaying"><Pause /></NIcon>
-        <NIcon v-else><Play /></NIcon>
-      </NButton>
-      <NButton size="small" @click="nextSong">
-        <NIcon><Pause /></NIcon>
-      </NButton>
+      <n-button size="small" @click="prevSong">
+        <n-icon><pause /></n-icon>
+      </n-button>
+      <n-button size="small" @click="playPause">
+        <n-icon v-if="isPlaying"><pause /></n-icon>
+        <n-icon v-else><Play /></n-icon>
+      </n-button>
+      <n-button size="small" @click="nextSong">
+        <n-icon><Pause /></n-icon>
+      </n-button>
     </div>
     <div class="progress">
       <span>{{ formatTime(currentTime) }}</span>
-      <NSlider
+      <n-slider
         v-model:value="currentTime"
         :max="currentSong.duration"
         @update:value="onProgressChange"
@@ -108,8 +108,8 @@ const onProgressChange = (value: number) => {
       <span>{{ formatTime(currentSong.duration) }}</span>
     </div>
     <div class="volume">
-      <NIcon><Pause /></NIcon>
-      <NSlider v-model:value="volume" :max="100" />
+      <n-icon><pause /></n-icon>
+      <n-slider v-model:value="volume" :max="100" />
     </div>
   </div>
 </template>

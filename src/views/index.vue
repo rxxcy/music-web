@@ -12,6 +12,7 @@
         </n-radio>
       </n-space>
     </n-radio-group>
+    {{ isShowPlayer }}
     <div class="mt-2 w-350px">
       <n-input
         v-model:value="params.keyword"
@@ -30,7 +31,8 @@
   <section class="mt-4">
     <n-spin :show="isLoading">
       <n-infinite-scroll
-        style="height: calc(100vh - 170px)"
+        :style="{ height: `calc(100vh - ${isShowPlayer ? '250' : '170'}px)` }"
+        class="skkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
         :distance="10"
         @load="handleLoadMore"
       >
@@ -45,7 +47,7 @@
             @download="handleDownload"
           />
         </div>
-        <n-back-top :right="100" />
+        <n-back-top v-if="!isLoading" :right="100" :bottom="200" />
         <div v-if="isLoading" class="text-center py-2">加载中...</div>
         <div v-if="noMore" class="text-center py-2">没有更多了 🤪</div>
       </n-infinite-scroll>
@@ -67,10 +69,13 @@ import {
 } from '~/api/source'
 import type { MusicItem } from '~/interface/kuwo'
 import { useAppStore } from '~/store'
+import { usePlayerStore } from '~/store/modules/player'
 
 const inputInstRef = ref<InputInst | null>(null)
+const playerStore = usePlayerStore()
 const appStore = useAppStore()
 const disabledPicPreview = computed(() => appStore.disabledPicPreview)
+const isShowPlayer = computed(() => playerStore.isShow)
 const isLoading = computed(() => appStore.isLoading)
 const platfroms = ref<Platfrom['platform'] | null>(null)
 const params = reactive<SearchParams>({
