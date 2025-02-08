@@ -14,7 +14,7 @@ export const getLoginQRCode = () => {
 
 export interface LoginStatusResponse {
   code: number
-  cookie: string
+  token: string
   message: string
 }
 export const getQRcodeStatus = (key: string) => {

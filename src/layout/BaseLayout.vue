@@ -7,8 +7,8 @@
       :width="240"
       :collapsed="collapsed"
       show-trigger
-      @collapse="collapsed = true"
-      @expand="collapsed = false"
+      @collapse="handlerSetCollapsed(true)"
+      @expand="handlerSetCollapsed(false)"
       :content-style="{
         height: '100vh',
       }"
@@ -42,10 +42,15 @@
       </n-layout-header>
       <n-layout-content>
         <main class="p-3">
-          <n-scrollbar style="min-height: calc(100vh - 86px)">
-            <router-view />
-            <Player />
-          </n-scrollbar>
+          <!-- <n-scrollbar style="min-height: calc(100vh - 586px)"> -->
+          <router-view v-slot="{ Component }">
+            <keep-alive>
+              <component :is="Component" />
+            </keep-alive>
+          </router-view>
+
+          <Player />
+          <!-- </n-scrollbar> -->
         </main>
       </n-layout-content>
     </n-layout>
@@ -55,14 +60,17 @@
 <script setup lang="ts">
 import AppHeader from './components/Header.vue'
 import UserInfo from './components/UserInfo.vue'
-import Player from '~/components/palyer.vue'
-import { h, ref, watch } from 'vue'
+import Player from '~/components/player.vue'
+import { computed, h, ref, watch } from 'vue'
 import type { MenuOption } from 'naive-ui'
 import type { Component } from 'vue'
 import { ApertureOutline, CloudOutline, AlbumsOutline } from '@vicons/ionicons5'
 import { NIcon } from 'naive-ui'
 import { RouterLink } from 'vue-router'
 import { router } from '~/router'
+import { useAppStore } from '~/store'
+
+const appStore = useAppStore()
 
 function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) })
@@ -114,11 +122,12 @@ const menuOptions: MenuOption[] = [
 ]
 
 const activeKey = ref<string | null>(null)
-const collapsed = ref(true)
-
+const collapsed = computed(() => appStore.isMenuCollapsed)
+const handlerSetCollapsed = (value: boolean) =>
+  appStore.setIsMenuCollapsed(value)
 watch(
   () => router.currentRoute.value.name,
-  name => {
+  (name) => {
     activeKey.value = name as string
   },
   {

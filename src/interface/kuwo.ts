@@ -6,12 +6,14 @@ export interface Quality {
 }
 
 export interface MusicItem {
-  id: number
+  id: number | string
   name: string
   artists: string
   album: string
   duration: number
   albumpic: string
-  artistpic: string
-  quality: Quality[]
+  url: string
+  artistpic?: string
+  quality?: Quality[]
+  lyrics?: string
 }

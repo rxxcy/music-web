@@ -12,11 +12,10 @@
         </n-radio>
       </n-space>
     </n-radio-group>
-    {{ isShowPlayer }}
     <div class="mt-2 w-350px">
       <n-input
         v-model:value="params.keyword"
-        clearable
+        :clearable="!isLoading"
         placeholder="来点什么"
         @keydown.enter.prevent="handleSearch"
         :loading="isLoading"
@@ -47,7 +46,7 @@
             @download="handleDownload"
           />
         </div>
-        <n-back-top v-if="!isLoading" :right="100" :bottom="200" />
+        <n-back-top v-if="!isLoading" :right="50" :bottom="150" />
         <div v-if="isLoading" class="text-center py-2">加载中...</div>
         <div v-if="noMore" class="text-center py-2">没有更多了 🤪</div>
       </n-infinite-scroll>
@@ -121,13 +120,16 @@ const serachSong = async () => {
   appStore.setIsLoading()
 }
 
-const handlePlay = async (id: number, quality: string) => {
+const handlePlay = async (song: MusicItem, quality: string) => {
   appStore.setIsLoading()
-  const res = await url({ platform: params.platform, id, quality })
+  const res = await url({ platform: params.platform, id: song.id, quality })
   const { url: songUrl } = res.data
   if (songUrl) {
-    // window.open(songUrl, '_blank')
-    console.log(songUrl)
+    // TODO
+    song.url = songUrl
+    console.log(JSON.stringify(song))
+
+    playerStore.addToPlaylist(song)
   }
   appStore.setIsLoading()
 }

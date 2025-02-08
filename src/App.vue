@@ -2,12 +2,22 @@
 import { onMounted } from 'vue'
 import NProvider from '~/components/provider/AppProvider.vue'
 import { useUserStore } from './store/modules/user'
+import { useAppStore } from './store'
 // import { io } from 'socket.io-client'
 
 onMounted(() => {
-  const token = localStorage.getItem('token')
-  const stoer = useUserStore()
-  if (token) stoer.setToken(token)
+  const token = window.localStorage.getItem('token')
+
+  if (token) {
+    const stoer = useUserStore()
+    stoer.setToken(token)
+  }
+
+  const isMenuCollapsed = window.localStorage.getItem('isMenuCollapsed')
+  if (isMenuCollapsed) {
+    const store = useAppStore()
+    store.setIsMenuCollapsed(isMenuCollapsed == 'true')
+  }
 })
 
 // // 连接到服务器
@@ -33,11 +43,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- <keep-alive> -->
   <n-provider>
     <router-view />
   </n-provider>
-  <!-- </keep-alive> -->
 </template>
 
 <style></style>

@@ -10,7 +10,7 @@ export interface SearchParams {
 
 export interface UrlParams {
   platform: string
-  id: number
+  id: number | string
   quality: string
 }
 

@@ -47,7 +47,7 @@
         <n-button type="info" size="small">下载</n-button>
       </n-dropdown>
     </n-flex>
-    <div v-else class="select-none">暂无音源</div>
+    <div v-else class="select-none text-gray">暂无音源</div>
   </article>
 </template>
 <script lang="ts" setup>
@@ -70,18 +70,18 @@ const albumpic = computed(() => imgHost + song.value.albumpic)
 const duration = computed(() => secondsToMinutesSeconds(song.value.duration))
 const qualitys = computed(() => {
   const qs = song.value.quality
-  return qs.sort((a, b) => b.bitrate - a.bitrate)
+  return qs!.sort((a, b) => b.bitrate - a.bitrate)
 })
 const downloadOptions = computed(() => {
-  return qualitys.value?.map(item => {
+  return qualitys.value?.map((item) => {
     return {
-      label: `${item.format} :  ${item.size}`,
+      label: `${item.format}: ${item.size}`,
       key: `${item.bitrate}${item.format}`,
     }
   })
 })
 
-const handlePlay = () => emit('play', song.value.id, '128mp3')
+const handlePlay = () => emit('play', song.value, '128mp3')
 const handleTeleport = () => emit('teleport', song.value.id)
 const handleDownload = (e: string) => emit('download', song.value.id, e)
 </script>

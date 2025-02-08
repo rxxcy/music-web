@@ -43,10 +43,21 @@ const handlerGetQRcodeStatus = async () => {
     return
   }
   const res = await getQRcodeStatus(qrcode.unikey)
-  if (res.data.code === 803) {
-    clearInterval(timer.value)
-    store.setToken(res.data.cookie)
-    router.push('/')
+  // 800 为二维码过期,801 为等待扫码,802 为待确认,803 为授权登录成功
+  switch (res.data.code) {
+    case 800:
+      handlerGetLoginQRCode()
+      break
+    case 801:
+      break
+    case 802:
+      break
+    case 803:
+      clearInterval(timer.value)
+      store.setToken(res.data.token)
+      router.push('/')
+      break
+    default:
   }
 }
 
