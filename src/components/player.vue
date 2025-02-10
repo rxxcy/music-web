@@ -1,5 +1,5 @@
 <template>
-  <aside class="pos-fixed bottom-0 h-70px" :style="style">
+  <aside class="pos-fixed bottom-0 h-70px bg-white" :style="style">
     <div class="">
       <n-slider
         v-model:value="progress"

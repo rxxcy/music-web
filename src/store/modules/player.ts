@@ -37,7 +37,7 @@ export const usePlayerStore = defineStore('player', {
     currentIndex: 0,
     volume: 1,
     progress: 0,
-    loopMode: 'none',
+    loopMode: 'all',
     audio: null,
   }),
   actions: {

@@ -1,10 +1,10 @@
 <template>
   <main class="w-screen h-screen flex justify-center items-center">
-    <section>
+    <section class="cursor-pointer">
       <img
         @click="handlerGetLoginQRCode"
         v-if="qrcode.unikey"
-        class="block border border-solid border-gray-3 rounded-md w-150px h-150px"
+        class="block border border-solid border-gray-2 rounded-sm w-150px h-150px"
         :src="qrcode.qrimg"
         alt="qrcode"
       />
@@ -16,11 +16,15 @@
         加载中
       </div>
     </section>
+
+    <div v-if="status" class="pos-fixed bottom-0 text-gray">
+      {{ status }}
+    </div>
   </main>
 </template>
 
 <script lang="ts" setup>
-import { onDeactivated, onMounted, reactive, ref } from 'vue'
+import { onUnmounted, onMounted, reactive, ref } from 'vue'
 import {
   type LoginQrCodeResponse,
   getLoginQRCode,
@@ -37,12 +41,14 @@ const qrcode = reactive<LoginQrCodeResponse>({
   qrurl: '',
   qrimg: '',
 })
+const status = ref('')
 
 const handlerGetQRcodeStatus = async () => {
   if (!qrcode.unikey) {
     return
   }
   const res = await getQRcodeStatus(qrcode.unikey)
+  status.value = res.data.message
   // 800 为二维码过期,801 为等待扫码,802 为待确认,803 为授权登录成功
   switch (res.data.code) {
     case 800:
@@ -87,7 +93,7 @@ onMounted(() => {
   handlerGetLoginQRCode()
 })
 
-onDeactivated(() => {
+onUnmounted(() => {
   if (timer.value) {
     clearInterval(timer.value)
   }

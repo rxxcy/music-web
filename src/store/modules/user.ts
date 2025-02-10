@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { isNotEmptyObject } from '~/utils/is'
 import { getAccountInfo, type Account, type Profile } from '~/api/user'
+import { router } from '~/router'
 
 interface State {
   token: string | null
@@ -15,6 +16,11 @@ export const useUserStore = defineStore('user', {
     profile: null,
   }),
   actions: {
+    logout() {
+      this.token = null
+      window.localStorage.removeItem('token')
+      router.push({ name: 'login' })
+    },
     setToken(token: string) {
       window.localStorage.setItem('token', token)
       this.token = token

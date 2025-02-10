@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { NAvatar, NText, useMessage } from 'naive-ui'
+import { NAvatar, NText } from 'naive-ui'
 import { h, onMounted, toRefs, ref } from 'vue'
 import type { Profile } from '~/api/user'
 import { useUserStore } from '~/store/modules/user'
@@ -87,8 +87,12 @@ const options = [
     key: 'logout',
   },
 ]
-const message = useMessage()
+
 const handleSelect = (key: string | number) => {
-  message.info(String(key))
+  switch (key) {
+    case 'logout':
+      userStore.logout()
+      break
+  }
 }
 </script>

@@ -3,8 +3,15 @@ import Axios, {
   type AxiosResponse,
   type AxiosError,
 } from 'axios'
+import { router } from '~/router'
 import { pinia } from '~/store'
 import { useAppStore } from '~/store'
+
+enum HTTP_STATUS {
+  UNAUTHORIZED = 401,
+}
+
+let has = false
 
 export const axios = Axios.create({
   baseURL: 'http://localhost:3090',
@@ -48,9 +55,31 @@ axios.interceptors.response.use(
   },
   (error: AxiosError) => {
     // 处理响应错误
-    useAppStore(pinia).setIsLoading(false)
-    console.log('响应拦截器处理错误', error)
-    window?.$loadingBar?.error()
+    const appSatore = useAppStore(pinia)
+    appSatore.setIsLoading(false)
+    const has = appSatore.isHasSingleDialog
+    const data = error.response?.data as { code: number; message: string }
+    switch (data.code) {
+      case HTTP_STATUS.UNAUTHORIZED:
+        if (has) return
+        appSatore.setIsHasSingleDialog(true)
+        window?.$dialog.warning({
+          title: '警告',
+          content: '未登录或登录失效,即将跳转到登录页面。',
+          positiveText: '好',
+          negativeText: '不',
+          draggable: true,
+          onPositiveClick: () => {
+            appSatore.setIsHasSingleDialog(false)
+            window.localStorage.removeItem('token')
+            router.push({ name: 'login' })
+          },
+          onNegativeClick: () => {
+            appSatore.setIsHasSingleDialog(false)
+            window.$message.info('取消跳转')
+          },
+        })
+    }
     return Promise.reject(error)
   }
 )

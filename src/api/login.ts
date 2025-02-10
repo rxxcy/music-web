@@ -8,7 +8,7 @@ export interface LoginQrCodeResponse {
 
 export const getLoginQRCode = () => {
   return axios<LoginQrCodeResponse>({
-    url: '/netease/loginqr',
+    url: '/auth/qrcode',
   })
 }
 
@@ -19,7 +19,7 @@ export interface LoginStatusResponse {
 }
 export const getQRcodeStatus = (key: string) => {
   return axios<LoginStatusResponse>({
-    url: '/netease/loginqrcheck',
+    url: '/auth/check',
     params: {
       key,
     },
