@@ -90,7 +90,7 @@ const song = reactive<{ rows: MusicItem[]; total: number }>({
 const noMore = ref(false)
 
 onMounted(() => {
-  inputInstRef.value?.focus()
+  // inputInstRef.value?.focus()
 })
 const handleLoadMore = () => {
   if (isLoading.value || noMore.value) return

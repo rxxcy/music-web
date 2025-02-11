@@ -22,7 +22,7 @@
             <span class="hidden">自由的音乐</span>
           </a>
         </div>
-        <n-scrollbar style="height: calc(100vh - 110px)">
+        <n-scrollbar style="height: calc(100vh - 129px)">
           <n-menu
             v-model:value="activeKey"
             :collapsed="collapsed"
@@ -31,7 +31,7 @@
             :options="menuOptions"
           />
         </n-scrollbar>
-        <div class="pt-2 bg-gray-1 h-43px">
+        <div class="bg-gray-1 h-70px">
           <user-info :collapsed="collapsed" />
         </div>
       </div>

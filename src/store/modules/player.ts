@@ -3,7 +3,8 @@ import type { MusicItem } from '~/interface/kuwo'
 
 interface State {
   isShow: boolean
-  isPause: boolean
+  isStop: boolean
+  isPaused: boolean
   playlist: MusicItem[]
   currentIndex: number
   volume: number
@@ -15,23 +16,27 @@ interface State {
 export const usePlayerStore = defineStore('player', {
   state: (): State => ({
     isShow: true,
-    isPause: false,
+    isStop: true,
+    isPaused: false,
     playlist: [
       {
-        id: '71743',
-        name: '我是真的爱上你',
-        artists: '王杰',
-        album: '爱与梦',
-        duration: 302,
-        albumpic: '120/s4s92/92/2381711760.jpg',
-        artistpic: '120/s4s79/6/3934255369.png',
+        id: '228908',
+        name: '晴天',
+        artists: '周杰伦',
+        album: '叶惠美',
+        duration: 269,
+        albumpic:
+          'https://img2.kuwo.cn/star/albumcover/120/s3s94/93/211513640.jpg',
+        artistpic:
+          'https://img2.kuwo.cn/star/albumcover/120/s4s22/47/783999746.png',
         quality: [
-          { level: 'ff', bitrate: 2000, format: 'flac', size: '31.16Mb' },
-          { level: 'p', bitrate: 320, format: 'mp3', size: '11.54Mb' },
-          { level: 'h', bitrate: 128, format: 'mp3', size: '4.61Mb' },
-          { level: 's', bitrate: 48, format: 'aac', size: '1.73Mb' },
+          { level: 'ff', bitrate: 2000, format: 'flac', size: '29.97Mb' },
+          { level: 'p', bitrate: 320, format: 'mp3', size: '10.29Mb' },
+          { level: 'h', bitrate: 128, format: 'mp3', size: '4.11Mb' },
+          { level: 'h', bitrate: 100, format: 'ogg', size: '2.79Mb' },
+          { level: 's', bitrate: 48, format: 'aac', size: '1.56Mb' },
         ],
-        url: 'http://li.sycdn.kuwo.cn/3644326eed6e584e92d4bf0ab6f43f37/67a71fda/resource/n2/79/34/1108461270.mp3?bitrate$320&format$mp3&source$kwplayer_ar_5.1.0.0_B_jiakong_vh.apk&type$convert_url2',
+        url: 'http://er.sycdn.kuwo.cn/4f84e1c8da1308b735fdf4f149a04fb9/67aafbb6/resource/30106/trackmedia/M5000039MnYb0qxYhV.mp3?bitrate$128&format$mp3&source$kwplayer_ar_5.1.0.0_B_jiakong_vh.apk&type$convert_url2',
       },
     ],
     currentIndex: 0,
@@ -40,8 +45,15 @@ export const usePlayerStore = defineStore('player', {
     loopMode: 'all',
     audio: null,
   }),
+  getters: {
+    // 获取当前播放的歌曲
+    currentSong: (state): MusicItem | null =>
+      state.playlist[state.currentIndex] || null,
+    volumeValue: (state): number => state.volume * 100,
+  },
   actions: {
     initAudio() {
+      this.isStop = false
       if (!this.audio) {
         this.audio = new Audio()
         this.audio.ontimeupdate = () => {
@@ -63,7 +75,7 @@ export const usePlayerStore = defineStore('player', {
       if (this.audio) {
         this.audio.src = this.playlist[this.currentIndex]?.url || ''
         this.audio.play()
-        this.isPause = false
+        this.isPaused = false
         this.audio.ontimeupdate = () => {
           if (this.audio && this.audio.duration) {
             this.progress = (this.audio.currentTime / this.audio.duration) * 100
@@ -80,11 +92,11 @@ export const usePlayerStore = defineStore('player', {
     pause() {
       if (this.audio) {
         this.audio.pause()
-        this.isPause = true
+        this.isPaused = true
       }
     },
     togglePlay() {
-      if (this.isPause) {
+      if (this.isPaused) {
         this.play()
       } else {
         this.pause()
@@ -120,6 +132,7 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     setVolume(value: number) {
+      console.log('🚀 ~ setVolume ~ value:', value)
       if (this.audio) {
         this.audio.volume = value
         this.volume = value

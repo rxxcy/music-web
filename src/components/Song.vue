@@ -58,7 +58,6 @@ import type { MusicItem } from '~/interface/kuwo'
 
 const emit = defineEmits(['play', 'teleport', 'download'])
 
-const imgHost = 'https://img2.kuwo.cn/star/albumcover/'
 interface Props {
   song: MusicItem
   disabledPreview?: boolean
@@ -66,7 +65,7 @@ interface Props {
 const props = defineProps<Props>()
 const { song, disabledPreview } = toRefs(props)
 
-const albumpic = computed(() => imgHost + song.value.albumpic)
+const albumpic = computed(() => song.value.albumpic)
 const duration = computed(() => secondsToMinutesSeconds(song.value.duration))
 const qualitys = computed(() => {
   const qs = song.value.quality
