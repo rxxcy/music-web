@@ -1,12 +1,19 @@
 <template>
   <main class="w-screen h-screen flex justify-center items-center">
     <section class="cursor-pointer">
-      <img
+      <!-- <img
         @click="handlerGetLoginQRCode"
-        v-if="qrcode.unikey"
+        v-if="unikey"
         class="block border border-solid border-gray-2 rounded-sm w-150px h-150px"
-        :src="qrcode.qrimg"
+        :src="unikey"
         alt="qrcode"
+      /> -->
+
+      <n-qr-code
+        v-if="unikey"
+        @click="handlerGetLoginQRCode"
+        class="block border border-solid border-gray-2 rounded-sm w-150px h-150px"
+        :value="qrcode"
       />
 
       <div
@@ -24,30 +31,27 @@
 </template>
 
 <script lang="ts" setup>
-import { onUnmounted, onMounted, reactive, ref } from 'vue'
-import {
-  type LoginQrCodeResponse,
-  getLoginQRCode,
-  getQRcodeStatus,
-} from '~/api/login'
+import { computed, onUnmounted, onMounted, ref } from 'vue'
+import { getLoginQRCode, getQRcodeStatus } from '~/api/login'
 import { router } from '~/router'
 import { useUserStore } from '~/store/modules/user'
 
 const store = useUserStore()
 const times = ref<number>(0)
 const timer = ref<any>(null)
-const qrcode = reactive<LoginQrCodeResponse>({
-  unikey: null,
-  qrurl: '',
-  qrimg: '',
-})
+const unikey = ref('')
 const status = ref('')
+const qrcode = computed(() => {
+  const key = unikey.value
+  if (!key) return
+  return `https://music.163.com/login?codekey=${key}`
+})
 
 const handlerGetQRcodeStatus = async () => {
-  if (!qrcode.unikey) {
+  if (!unikey.value) {
     return
   }
-  const res = await getQRcodeStatus(qrcode.unikey)
+  const res = await getQRcodeStatus(unikey.value)
   status.value = res.data.message
   // 800 为二维码过期,801 为等待扫码,802 为待确认,803 为授权登录成功
   switch (res.data.code) {
@@ -68,7 +72,7 @@ const handlerGetQRcodeStatus = async () => {
 }
 
 const handlerGetLoginQRCode = async () => {
-  qrcode.unikey = null
+  unikey.value = ''
   const res = await getLoginQRCode()
 
   if (timer.value) {
@@ -84,9 +88,7 @@ const handlerGetLoginQRCode = async () => {
       handlerGetQRcodeStatus()
     }, 3 * 1e3)
   }
-  qrcode.unikey = res.data.unikey
-  qrcode.qrurl = res.data.qrurl
-  qrcode.qrimg = res.data.qrimg
+  unikey.value = res.data.unikey
 }
 
 onMounted(() => {

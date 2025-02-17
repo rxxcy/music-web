@@ -1,14 +1,12 @@
 import { axios } from '~/utils/axios'
 
 export interface LoginQrCodeResponse {
-  unikey: string | null
-  qrurl: string
-  qrimg: string
+  unikey: string
 }
 
 export const getLoginQRCode = () => {
   return axios<LoginQrCodeResponse>({
-    url: '/auth/qrcode',
+    url: '/auth/unikey',
   })
 }
 
@@ -17,11 +15,11 @@ export interface LoginStatusResponse {
   token: string
   message: string
 }
-export const getQRcodeStatus = (key: string) => {
+export const getQRcodeStatus = (unikey: string) => {
   return axios<LoginStatusResponse>({
     url: '/auth/check',
     params: {
-      key,
+      unikey,
     },
   })
 }

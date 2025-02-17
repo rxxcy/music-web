@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { platform } from '~/api/source'
+import { platform } from '~/api/music'
 
 interface State {
   platform: []

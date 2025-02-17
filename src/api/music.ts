@@ -26,7 +26,7 @@ export const platform = () => {
 
 export const search = (params: SearchParams) => {
   return axios<{ rows: MusicItem[]; total: number }>({
-    url: '/source/search',
+    url: '/v1/music',
     params,
   })
 }

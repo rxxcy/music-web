@@ -65,7 +65,7 @@ import {
   url,
   type Platfrom,
   type SearchParams,
-} from '~/api/source'
+} from '~/api/music'
 import type { MusicItem } from '~/interface/kuwo'
 import { useAppStore } from '~/store'
 import { usePlayerStore } from '~/store/modules/player'

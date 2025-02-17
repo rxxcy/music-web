@@ -11,8 +11,6 @@ enum HTTP_STATUS {
   UNAUTHORIZED = 401,
 }
 
-let has = false
-
 export const axios = Axios.create({
   baseURL: 'http://localhost:3090',
   timeout: 20 * 1e3,
