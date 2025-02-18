@@ -57,6 +57,6 @@ export interface Profile {
 
 export const getAccountInfo = () => {
   return axios<{ account: Account; profile: Profile }>({
-    url: '/netease/account',
+    url: '/v1/netease',
   })
 }

@@ -14,13 +14,11 @@ export interface UrlParams {
   quality: string
 }
 
-export interface Platfrom {
-  platform: { [key: string]: string }
-}
+export type Platfrom = { [key: string]: string }
 
 export const platform = () => {
   return axios<Platfrom>({
-    url: '/source',
+    url: '/v1/music/platform',
   })
 }
 

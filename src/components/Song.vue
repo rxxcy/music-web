@@ -2,7 +2,7 @@
   <article class="flex gap-8 items-center py-2 px-4 rounded hover:bg-green-1">
     <n-image
       width="40"
-      :src="albumpic"
+      :src="song.album_pic"
       class="rounded h-40px"
       object-fit="cover"
       :preview-disabled="disabledPreview"
@@ -20,7 +20,7 @@
       </n-ellipsis>
     </h3>
     <n-ellipsis class="m-0 w-150px">
-      {{ song.artists }}
+      {{ song.artist }}
     </n-ellipsis>
 
     <p class="m-0 text-coolGray">{{ duration }}</p>
@@ -65,10 +65,9 @@ interface Props {
 const props = defineProps<Props>()
 const { song, disabledPreview } = toRefs(props)
 
-const albumpic = computed(() => song.value.albumpic)
 const duration = computed(() => secondsToMinutesSeconds(song.value.duration))
 const qualitys = computed(() => {
-  const qs = song.value.quality
+  const qs = parseQuality(song.value.quality)
   return qs!.sort((a, b) => b.bitrate - a.bitrate)
 })
 const downloadOptions = computed(() => {
@@ -79,6 +78,17 @@ const downloadOptions = computed(() => {
     }
   })
 })
+
+const parseQuality = (str: string): { [key: string]: any }[] => {
+  return str.split(';').map((item) => {
+    const obj: { [key: string]: any } = {}
+    item.split(',').forEach((pair) => {
+      const [key, value] = pair.split(':')
+      obj[key] = value
+    })
+    return obj
+  })
+}
 
 const handlePlay = () => emit('play', song.value, '128mp3')
 const handleTeleport = () => emit('teleport', song.value.id)

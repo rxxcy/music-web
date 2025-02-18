@@ -31,7 +31,6 @@
     <n-spin :show="isLoading">
       <n-infinite-scroll
         :style="{ height: `calc(100vh - ${isShowPlayer ? '250' : '170'}px)` }"
-        class="skkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
         :distance="10"
         @load="handleLoadMore"
       >
@@ -76,7 +75,7 @@ const appStore = useAppStore()
 const disabledPicPreview = computed(() => appStore.disabledPicPreview)
 const isShowPlayer = computed(() => playerStore.isShow)
 const isLoading = computed(() => appStore.isLoading)
-const platfroms = ref<Platfrom['platform'] | null>(null)
+const platfroms = ref<Platfrom | null>(null)
 const params = reactive<SearchParams>({
   platform: 'kuwo',
   keyword: '李荣浩',
@@ -97,9 +96,9 @@ const handleLoadMore = () => {
   params.page++
   serachSong()
 }
-const handleGetSource = async () => {
+const handleGetPlatform = async () => {
   const res = await platform()
-  platfroms.value = res.data.platform
+  platfroms.value = res.data
 }
 
 const handleSearch = () => {
@@ -149,7 +148,7 @@ const handleDownload = async (id: number, quality: string) => {
 }
 
 onMounted(() => {
-  handleGetSource()
+  handleGetPlatform()
 })
 </script>
 
