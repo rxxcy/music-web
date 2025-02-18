@@ -1,89 +1,104 @@
 <template>
-  <aside class="pos-fixed bottom-0 h-70px bg-gray" :style="style">
-    <div class="flex h-full justify-between px-100px">
-      <div class="flex gap-4 items-center">
-        <div>
-          <n-image
-            width="50"
-            height="50"
-            class="rounded-sm block w-50px h-50px"
-            :src="currentSong?.albumpic"
-            preview-disabled
-          />
-        </div>
-        <div class="h-full flex flex-col justify-center">
-          <h3 class="m-0 p-0">
-            <n-ellipsis style="max-width: 100px">
-              {{ currentSong?.name }}
-            </n-ellipsis>
-          </h3>
-          <p class="m-0 text-sm">
-            <n-ellipsis style="max-width: 100px">
-              {{ currentSong?.artists }}
-            </n-ellipsis>
-          </p>
-        </div>
-      </div>
-      <div class="flex items-center">
-        <!-- <n-slider
+  <aside class="pos-fixed bottom-0 h-70px" :style="style">
+    <div class="pos-relative h-full w-full">
+      <div class="w-full pos-absolute left-0 top--10px">
+        <n-slider
           v-model:value="progress"
-          :step="10"
+          :step="1"
           :theme-overrides="sliderThemeOverrides"
-        /> -->
-        <n-button quaternary circle>
-          <template #icon>
-            <n-icon>
-              <PlaySkipBackSharp />
-            </n-icon>
-          </template>
-        </n-button>
-        <n-button quaternary circle size="large">
-          <template #icon>
-            <n-icon size="34">
-              <PlayCircleOutline v-if="isPaused" />
-              <PauseCircleOutline v-else />
-            </n-icon>
-          </template>
-        </n-button>
-        <n-button quaternary circle>
-          <template #icon>
-            <n-icon>
-              <PlaySkipForwardSharp />
-            </n-icon>
-          </template>
-        </n-button>
+          :on-dragstart="handlerDragstart"
+          :on-dragend="handlerDragend"
+        />
       </div>
-      <div class="flex items-center">
-        <n-button quaternary circle size="large">
-          <template #icon>
-            <n-icon>
-              <SyncCircleOutline />
-            </n-icon>
-          </template>
-        </n-button>
-
-        <div>
-          <n-slider
-            class="w-100px"
-            v-model:value="volume"
-            :step="1"
-            :theme-overrides="sliderThemeOverrides"
-          />
+      <div class="flex h-full justify-between px-100px">
+        <div class="flex-1 flex gap-x-2 items-center">
+          <div>
+            <n-image
+              width="50"
+              height="50"
+              class="rounded-sm block w-50px h-50px"
+              :src="currentSong?.album_pic"
+              preview-disabled
+            />
+          </div>
+          <div class="h-full flex flex-col justify-center">
+            <h3 class="m-0 p-0 cursor-pointer">
+              <n-ellipsis style="max-width: 200px">
+                {{ currentSong?.name }} {{ isDragingProgress ? '在' : '没' }}
+              </n-ellipsis>
+            </h3>
+            <p class="m-0 text-sm">
+              <n-ellipsis style="max-width: 200px">
+                {{ currentSong?.artist }}
+              </n-ellipsis>
+            </p>
+          </div>
         </div>
+        <div class="flex-1 flex items-center gap-x-2 justify-center">
+          <n-button quaternary circle>
+            <template #icon>
+              <n-icon>
+                <PlaySkipBackSharp />
+              </n-icon>
+            </template>
+          </n-button>
+          <n-button quaternary circle size="large" @click="handlerPlayOrPause">
+            <template #icon>
+              <n-icon size="34">
+                <PlayCircleOutline v-if="isPaused" />
+                <PauseCircleOutline v-else />
+              </n-icon>
+            </template>
+          </n-button>
+          <n-button quaternary circle>
+            <template #icon>
+              <n-icon>
+                <PlaySkipForwardSharp />
+              </n-icon>
+            </template>
+          </n-button>
+        </div>
+        <div class="flex-1 flex items-center gap-x-2 justify-end">
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <n-button quaternary circle size="large" @click="toggleLoopMode">
+                <template #icon>
+                  <n-icon>
+                    <SyncCircleOutline />
+                  </n-icon>
+                </template>
+              </n-button>
+            </template>
+            {{ loopMode }}
+          </n-tooltip>
 
-        <n-button quaternary circle>
-          <template #icon>
-            <n-icon>
-              <ListCircleOutline />
-            </n-icon>
-          </template>
-        </n-button>
+          <div>
+            <n-slider
+              class="w-100px"
+              v-model:value="volume"
+              :step="1"
+              :theme-overrides="sliderThemeOverrides"
+            />
+          </div>
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <n-button quaternary circle>
+                <template #icon>
+                  <n-icon>
+                    <ListCircleOutline />
+                  </n-icon>
+                </template>
+              </n-button>
+            </template>
+            播放列表
+          </n-tooltip>
+        </div>
       </div>
     </div>
   </aside>
 </template>
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { SliderProps } from 'naive-ui'
 import { usePlayerStore } from '~/store/modules/player'
 import { useAppStore } from '~/store'
@@ -106,14 +121,13 @@ const appStore = useAppStore()
 const isMenuCollapsed = computed(() => appStore.isMenuCollapsed)
 
 const playerStore = usePlayerStore()
+const isDragingProgress = computed(() => playerStore.isDragingProgress)
 const volume = computed({
   set(value: number) {
     return playerStore.setVolume(value / 100)
   },
   get() {
-    console.log(playerStore.volumeValue)
-
-    return playerStore.volumeValue * 100
+    return playerStore.volumeValue
   },
 })
 const isPaused = computed(() => playerStore.isPaused)
@@ -130,12 +144,28 @@ const style = computed(() => {
         left: '240px',
       }
 })
+
 const progress = computed({
   get: () => playerStore.progress,
-  set: (value) => {
+  set: value => {
     playerStore.setProgress(value)
   },
 })
+
+const loopMode = computed(() => {
+  const mode = playerStore.loopMode
+  const maps = {
+    none: '无',
+    single: '单曲循环',
+    all: '列表循环',
+  }
+  return maps[mode]
+})
+
+const toggleLoopMode = () => playerStore.toggleLoopMode()
+const handlerPlayOrPause = () => playerStore.togglePlay()
+const handlerDragstart = () => playerStore.toggleIsDragingProgress(true)
+const handlerDragend = () => playerStore.toggleIsDragingProgress(false)
 </script>
 
 <style scoped></style>

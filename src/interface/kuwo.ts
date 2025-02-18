@@ -13,7 +13,7 @@ export interface MusicItem {
   duration: number
   album_pic: string
   url: string
-  artistpic?: string
+  artist_pic?: string
   quality: string
   lyrics?: string
 }

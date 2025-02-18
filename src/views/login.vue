@@ -12,12 +12,12 @@
       <n-qr-code
         v-if="unikey"
         @click="handlerGetLoginQRCode"
-        class="block border border-solid border-gray-2 rounded-sm w-150px h-150px"
+        class="block border border-solid border-gray-2"
         :value="qrcode"
       />
 
       <div
-        class="w-150px h-150px bg-gray-1 rounded-md flex items-center justify-center animate-pulse"
+        class="w-126px h-126px bg-gray-1 rounded-md flex items-center justify-center animate-pulse"
         v-else
       >
         加载中

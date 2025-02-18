@@ -9,6 +9,7 @@ interface State {
   currentIndex: number
   volume: number
   progress: number
+  isDragingProgress: boolean
   loopMode: 'none' | 'single' | 'all'
   audio: HTMLAudioElement | null
 }
@@ -20,28 +21,24 @@ export const usePlayerStore = defineStore('player', {
     isPaused: false,
     playlist: [
       {
-        id: '228908',
-        name: '晴天',
-        artists: '周杰伦',
-        album: '叶惠美',
-        duration: 269,
-        albumpic:
-          'https://img2.kuwo.cn/star/albumcover/120/s3s94/93/211513640.jpg',
-        artistpic:
-          'https://img2.kuwo.cn/star/albumcover/120/s4s22/47/783999746.png',
-        quality: [
-          { level: 'ff', bitrate: 2000, format: 'flac', size: '29.97Mb' },
-          { level: 'p', bitrate: 320, format: 'mp3', size: '10.29Mb' },
-          { level: 'h', bitrate: 128, format: 'mp3', size: '4.11Mb' },
-          { level: 'h', bitrate: 100, format: 'ogg', size: '2.79Mb' },
-          { level: 's', bitrate: 48, format: 'aac', size: '1.56Mb' },
-        ],
-        url: 'http://er.sycdn.kuwo.cn/4f84e1c8da1308b735fdf4f149a04fb9/67aafbb6/resource/30106/trackmedia/M5000039MnYb0qxYhV.mp3?bitrate$128&format$mp3&source$kwplayer_ar_5.1.0.0_B_jiakong_vh.apk&type$convert_url2',
+        id: '55724544',
+        name: '年少有为',
+        artist: '李荣浩',
+        artist_pic:
+          'https://img2.kuwo.cn/star/albumcover/120/14/96/3070098221.jpg',
+        album: '耳朵',
+        album_pic:
+          'https://img2.kuwo.cn/star/albumcover/120/59/36/3502877812.jpg',
+        duration: 279,
+        quality:
+          'level:ff,bitrate:2000,format:flac,size:29.80Mb;level:p,bitrate:320,format:mp3,size:10.65Mb;level:s,bitrate:48,format:aac,size:1.61Mb;level:h,bitrate:100,format:ogg,size:2.99Mb;level:h,bitrate:128,format:mp3,size:4.26Mb',
+        url: 'http://lw.sycdn.kuwo.cn/fbe565a445b6bcb4bf05a69a3c6a90be/67b47917/resource/30106/trackmedia/M800003ZQREs39AMVp.mp3?bitrate$320&format$mp3&source$kwplayer_ar_5.1.0.0_B_jiakong_vh.apk&type$convert_url2',
       },
     ],
     currentIndex: 0,
     volume: 1,
     progress: 0,
+    isDragingProgress: false,
     loopMode: 'all',
     audio: null,
   }),
@@ -49,7 +46,7 @@ export const usePlayerStore = defineStore('player', {
     // 获取当前播放的歌曲
     currentSong: (state): MusicItem | null =>
       state.playlist[state.currentIndex] || null,
-    volumeValue: (state): number => state.volume * 100,
+    volumeValue: (state): number => ~~(state.volume * 100),
   },
   actions: {
     initAudio() {
@@ -77,6 +74,7 @@ export const usePlayerStore = defineStore('player', {
         this.audio.play()
         this.isPaused = false
         this.audio.ontimeupdate = () => {
+          if (this.isDragingProgress) return
           if (this.audio && this.audio.duration) {
             this.progress = (this.audio.currentTime / this.audio.duration) * 100
           }
@@ -118,6 +116,11 @@ export const usePlayerStore = defineStore('player', {
       }
       this.play()
     },
+    toggleIsDragingProgress(value?: boolean) {
+      console.log('🚀 ~ toggleIsDragingProgress ~ value:', value)
+      if (value !== undefined) return (this.isDragingProgress = value)
+      this.isDragingProgress = !this.isDragingProgress
+    },
     seekTo(time: number) {
       if (this.audio && this.audio.duration) {
         this.audio.currentTime = time
@@ -126,17 +129,18 @@ export const usePlayerStore = defineStore('player', {
     },
     setProgress(value: number) {
       if (this.audio && this.audio.duration) {
-        const newTime = (value / 100) * this.audio.duration
-        this.audio.currentTime = newTime
         this.progress = value
+        if (!this.isDragingProgress) {
+          const newTime = (this.progress / 100) * this.audio.duration
+          this.audio.currentTime = newTime
+        }
       }
     },
     setVolume(value: number) {
-      console.log('🚀 ~ setVolume ~ value:', value)
       if (this.audio) {
         this.audio.volume = value
-        this.volume = value
       }
+      this.volume = value
     },
     toggleLoopMode() {
       this.loopMode =
@@ -151,7 +155,7 @@ export const usePlayerStore = defineStore('player', {
       this.playSongAtIndex(this.playlist.length - 1)
     },
     removeFromPlaylist(id: number) {
-      this.playlist = this.playlist.filter((song) => song.id !== id)
+      this.playlist = this.playlist.filter(song => song.id !== id)
     },
     getCurrentSong(): MusicItem | null {
       return this.playlist[this.currentIndex] || null

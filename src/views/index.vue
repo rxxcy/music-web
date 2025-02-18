@@ -78,7 +78,7 @@ const isLoading = computed(() => appStore.isLoading)
 const platfroms = ref<Platfrom | null>(null)
 const params = reactive<SearchParams>({
   platform: 'kuwo',
-  keyword: '李荣浩',
+  keyword: '安河桥',
   page: 1,
   limit: 30,
 })
@@ -126,8 +126,6 @@ const handlePlay = async (song: MusicItem, quality: string) => {
   if (songUrl) {
     // TODO
     song.url = songUrl
-    console.log(JSON.stringify(song))
-
     playerStore.addToPlaylist(song)
   }
   appStore.setIsLoading()

@@ -40,7 +40,7 @@ interface UrlResponse {
 
 export const url = (params: UrlParams) => {
   return axios<UrlResponse>({
-    url: '/source/url',
+    url: '/v1/music/url',
     params,
   })
 }
