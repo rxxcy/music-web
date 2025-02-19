@@ -27,11 +27,21 @@
                 {{ currentSong?.name }}
               </n-ellipsis>
             </h3>
-            <p class="m-0 text-sm">
+
+            <div class="flex">
               <n-ellipsis style="max-width: 200px">
-                {{ currentSong?.artist }}
+                <p class="m-0 text-sm">
+                  {{ currentSong?.artist }}
+                </p>
               </n-ellipsis>
-            </p>
+              <span class="ml-2 text-gray-5 flex">
+                <span class="w-50px text-center">
+                  {{ duration[0] }}
+                </span>
+                <span class="">/</span>
+                <span class="w-50px text-center">{{ duration[1] }}</span>
+              </span>
+            </div>
           </div>
         </div>
         <div class="flex-1 flex items-center gap-x-2 justify-center">
@@ -106,8 +116,52 @@
         </div>
       </template>
       <n-scrollbar style="max-height: 100%" trigger="none">
-        <div class="" v-for="item in playlist" :key="item.id">
-          {{ item }}
+        <div class="flex flex-col gap-y-2">
+          <div
+            class="flex items-center gap-x-2 cursor-pointer play-list-music-item"
+            v-for="(item, index) in playlist"
+            :key="item.id"
+            @click="handlerPlayByIndex(index)"
+          >
+            <img
+              class="w-52px h-52px rounded block"
+              :src="item.album_pic"
+              :alt="item.name"
+            />
+            <div class="flex-1 h-full flex flex-col justify-center">
+              <h3
+                class="m0 font-400 duration-200"
+                :class="[currentSong?.id == item.id ? 'text-green' : '']"
+              >
+                <n-ellipsis style="max-width: 270px">
+                  {{ item.name }}
+                </n-ellipsis>
+              </h3>
+              <p class="m0 text-xs text-gray-6">
+                {{ item.artist }}
+              </p>
+            </div>
+            <div class="opacity-0 duration-200">
+              <n-button quaternary circle>
+                <template #icon>
+                  <n-icon>
+                    <PauseCircleOutline
+                      v-if="currentSong?.id == item.id && !isPaused"
+                    />
+                    <PlayCircleOutline v-else />
+                  </n-icon>
+                </template>
+              </n-button>
+              <n-button quaternary circle>
+                <template #icon>
+                  <n-icon><CloseCircleOutline /></n-icon>
+                </template>
+              </n-button>
+            </div>
+            <div class="">
+              {{ secondsToMinutesSeconds(item.duration) }}
+            </div>
+          </div>
         </div>
       </n-scrollbar>
     </n-drawer-content>
@@ -125,7 +179,9 @@ import {
   PlaySkipForwardSharp,
   SyncCircleOutline, // 循环
   ListCircleOutline, // 列表
+  CloseCircleOutline, //关闭
 } from '@vicons/ionicons5'
+import { secondsToMinutesSeconds } from '~/utils/format'
 
 type SliderThemeOverrides = NonNullable<SliderProps['themeOverrides']>
 
@@ -141,6 +197,12 @@ const isMenuCollapsed = computed(() => appStore.isMenuCollapsed)
 const playerStore = usePlayerStore()
 const playlist = computed(() => playerStore.playlist)
 const isDragingProgress = computed(() => playerStore.isDragingProgress)
+const duration = computed(() => {
+  if (!currentSong.value?.duration) return ['00:00', '00:00']
+  const c = currentSong.value.duration
+  const n = Math.ceil((playerStore.progress / 100) * c)
+  return [secondsToMinutesSeconds(n), secondsToMinutesSeconds(c)]
+})
 const volume = computed({
   set(value: number) {
     return playerStore.setVolume(value / 100)
@@ -166,7 +228,7 @@ const style = computed(() => {
 
 const progress = computed({
   get: () => playerStore.progress,
-  set: (value) => {
+  set: value => {
     playerStore.setProgress(value)
   },
 })
@@ -188,6 +250,24 @@ const handlerDragend = () => playerStore.toggleIsDragingProgress(false)
 
 const handlerNextSong = () => playerStore.nextSong()
 const handlerPrevSong = () => playerStore.prevSong()
+
+const handlerPlayByIndex = (index: number) => {
+  const t = playlist.value[index]
+  if (t.id === currentSong.value?.id) {
+    playerStore.togglePlay()
+    return
+  }
+  playerStore.playSongAtIndex(index)
+}
+// const secondsToMinutesSeconds = (x: number) => secondsToMinutesSeconds(x)
 </script>
 
-<style scoped></style>
+<style>
+.play-list-music-item:hover > .opacity-0 {
+  opacity: 1;
+}
+.play-list-music-item:hover > .flex-1 {
+  --un-text-opacity: 1;
+  color: rgb(74 222 128 / var(--un-text-opacity)) /* #4ade80 */;
+}
+</style>

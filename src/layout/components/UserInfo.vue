@@ -44,7 +44,7 @@ function renderCustomHeader() {
   return h(
     'div',
     {
-      style: 'display: flex; align-items: center; padding: 8px 12px;',
+      style: `display: flex; align-items: center; padding: 8px 12px; width: 230px;`,
     },
     [
       h(NAvatar, {
@@ -57,11 +57,7 @@ function renderCustomHeader() {
           h(NText, { depth: 2 }, { default: () => profile.value?.nickname }),
         ]),
         h('div', { style: 'font-size: 12px;' }, [
-          h(
-            NText,
-            { depth: 3 },
-            { default: () => '毫无疑问,你是办公室最靓的吊毛' }
-          ),
+          h(NText, { depth: 3 }, { default: () => profile.value?.signature }),
         ]),
       ]),
     ]

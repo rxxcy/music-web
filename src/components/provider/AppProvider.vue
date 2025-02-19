@@ -42,4 +42,4 @@ const ContextHolder = defineComponent({
 })
 </script>
 
-<style scoped></style>
+<style></style>

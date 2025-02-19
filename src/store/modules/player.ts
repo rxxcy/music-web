@@ -18,7 +18,7 @@ export const usePlayerStore = defineStore('player', {
   state: (): State => ({
     isShow: true,
     isStop: true,
-    isPaused: false,
+    isPaused: true,
     playlist: [
       {
         id: '55724544',
@@ -96,8 +96,10 @@ export const usePlayerStore = defineStore('player', {
     togglePlay() {
       if (this.isPaused) {
         this.play()
+        console.log('继续')
       } else {
         this.pause()
+        console.log('暂停')
       }
     },
     nextSong() {
@@ -117,7 +119,6 @@ export const usePlayerStore = defineStore('player', {
       this.play()
     },
     toggleIsDragingProgress(value?: boolean) {
-      console.log('🚀 ~ toggleIsDragingProgress ~ value:', value)
       if (value !== undefined) return (this.isDragingProgress = value)
       this.isDragingProgress = !this.isDragingProgress
     },
