@@ -68,6 +68,8 @@ import {
 import type { MusicItem } from '~/interface/kuwo'
 import { useAppStore } from '~/store'
 import { usePlayerStore } from '~/store/modules/player'
+// import { downloadFile } from '~/utils/download'
+// import { downloadFileWithProgress } from '~/api/download'
 
 const inputInstRef = ref<InputInst | null>(null)
 const playerStore = usePlayerStore()
@@ -78,7 +80,7 @@ const isLoading = computed(() => appStore.isLoading)
 const platfroms = ref<Platfrom | null>(null)
 const params = reactive<SearchParams>({
   platform: 'kuwo',
-  keyword: '安河桥',
+  keyword: '周杰伦',
   page: 1,
   limit: 30,
 })
@@ -135,12 +137,13 @@ const handleTeleport = (id: number) => {
   console.log('🚀 ~ handleTeleport ~ id:', id)
 }
 
-const handleDownload = async (id: number, quality: string) => {
+const handleDownload = async (song: MusicItem, quality: string) => {
   appStore.setIsLoading()
-  const res = await url({ platform: params.platform, id, quality })
-  const { url: songUrl } = res.data
+  const res = await url({ platform: params.platform, id: song.id, quality })
+  const { url: songUrl, format } = res.data
   if (songUrl) {
     window.open(songUrl, '_blank')
+    // downloadFileWithProgress(songUrl, `${song.name}.${format}`)
   }
   appStore.setIsLoading()
 }

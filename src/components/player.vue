@@ -24,7 +24,7 @@
           <div class="h-full flex flex-col justify-center">
             <h3 class="m-0 p-0 cursor-pointer">
               <n-ellipsis style="max-width: 200px">
-                {{ currentSong?.name }} {{ isDragingProgress ? '在' : '没' }}
+                {{ currentSong?.name }}
               </n-ellipsis>
             </h3>
             <p class="m-0 text-sm">
@@ -35,7 +35,7 @@
           </div>
         </div>
         <div class="flex-1 flex items-center gap-x-2 justify-center">
-          <n-button quaternary circle>
+          <n-button quaternary circle @click="handlerPrevSong">
             <template #icon>
               <n-icon>
                 <PlaySkipBackSharp />
@@ -50,7 +50,7 @@
               </n-icon>
             </template>
           </n-button>
-          <n-button quaternary circle>
+          <n-button quaternary circle @click="handlerNextSong">
             <template #icon>
               <n-icon>
                 <PlaySkipForwardSharp />
@@ -82,7 +82,7 @@
           </div>
           <n-tooltip trigger="hover">
             <template #trigger>
-              <n-button quaternary circle>
+              <n-button quaternary circle @click="handlerSetShowList">
                 <template #icon>
                   <n-icon>
                     <ListCircleOutline />
@@ -96,6 +96,22 @@
       </div>
     </div>
   </aside>
+
+  <n-drawer v-model:show="showList" :width="502">
+    <n-drawer-content>
+      <template #header>
+        <div class="flex gap-1">
+          <h3 class="m0 p0">播放列表</h3>
+          <small class="text-gray-6">{{ playlist.length }}</small>
+        </div>
+      </template>
+      <n-scrollbar style="max-height: 100%" trigger="none">
+        <div class="" v-for="item in playlist" :key="item.id">
+          {{ item }}
+        </div>
+      </n-scrollbar>
+    </n-drawer-content>
+  </n-drawer>
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
@@ -117,10 +133,13 @@ const sliderThemeOverrides: SliderThemeOverrides = {
   handleSize: '15px',
 }
 
+const showList = ref(false)
+const handlerSetShowList = () => (showList.value = !showList.value)
 const appStore = useAppStore()
 const isMenuCollapsed = computed(() => appStore.isMenuCollapsed)
 
 const playerStore = usePlayerStore()
+const playlist = computed(() => playerStore.playlist)
 const isDragingProgress = computed(() => playerStore.isDragingProgress)
 const volume = computed({
   set(value: number) {
@@ -147,7 +166,7 @@ const style = computed(() => {
 
 const progress = computed({
   get: () => playerStore.progress,
-  set: value => {
+  set: (value) => {
     playerStore.setProgress(value)
   },
 })
@@ -166,6 +185,9 @@ const toggleLoopMode = () => playerStore.toggleLoopMode()
 const handlerPlayOrPause = () => playerStore.togglePlay()
 const handlerDragstart = () => playerStore.toggleIsDragingProgress(true)
 const handlerDragend = () => playerStore.toggleIsDragingProgress(false)
+
+const handlerNextSong = () => playerStore.nextSong()
+const handlerPrevSong = () => playerStore.prevSong()
 </script>
 
 <style scoped></style>

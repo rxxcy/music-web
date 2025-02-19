@@ -92,5 +92,5 @@ const parseQuality = (str: string): { [key: string]: any }[] => {
 
 const handlePlay = () => emit('play', song.value, '128mp3')
 const handleTeleport = () => emit('teleport', song.value.id)
-const handleDownload = (e: string) => emit('download', song.value.id, e)
+const handleDownload = (e: string) => emit('download', song.value, e)
 </script>
