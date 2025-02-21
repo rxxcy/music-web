@@ -30,11 +30,13 @@
       justify="space-between"
       class="flex-1 flex-shrink-0"
     >
-      <n-button type="success" size="small" @click="handlePlay">试听</n-button>
+      <n-button type="success" size="small" tertiary @click="handlePlay"
+        >试听</n-button
+      >
       <n-tooltip trigger="hover">
         <template #trigger>
-          <n-button type="success" size="small" @click="handleTeleport">
-            传送
+          <n-button type="info" size="small" tertiary @click="handleTeleport">
+            上传
           </n-button>
         </template>
         默认顶级音质：{{ qualitys[0].format }} {{ qualitys[0].size }}
@@ -44,7 +46,7 @@
         :options="downloadOptions"
         @select="handleDownload"
       >
-        <n-button type="info" size="small">下载</n-button>
+        <n-button type="warning" tertiary size="small">下载</n-button>
       </n-dropdown>
     </n-flex>
     <div v-else class="select-none text-gray">暂无音源</div>

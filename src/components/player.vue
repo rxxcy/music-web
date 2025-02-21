@@ -107,65 +107,7 @@
     </div>
   </aside>
 
-  <n-drawer v-model:show="showList" :width="502">
-    <n-drawer-content>
-      <template #header>
-        <div class="flex gap-1">
-          <h3 class="m0 p0">播放列表</h3>
-          <small class="text-gray-6">{{ playlist.length }}</small>
-        </div>
-      </template>
-      <n-scrollbar style="max-height: 100%" trigger="none">
-        <div class="flex flex-col gap-y-2">
-          <div
-            class="flex items-center gap-x-2 cursor-pointer play-list-music-item"
-            v-for="(item, index) in playlist"
-            :key="item.id"
-            @click="handlerPlayByIndex(index)"
-          >
-            <img
-              class="w-52px h-52px rounded block"
-              :src="item.album_pic"
-              :alt="item.name"
-            />
-            <div class="flex-1 h-full flex flex-col justify-center">
-              <h3
-                class="m0 font-400 duration-200"
-                :class="[currentSong?.id == item.id ? 'text-green' : '']"
-              >
-                <n-ellipsis style="max-width: 270px">
-                  {{ item.name }}
-                </n-ellipsis>
-              </h3>
-              <p class="m0 text-xs text-gray-6">
-                {{ item.artist }}
-              </p>
-            </div>
-            <div class="opacity-0 duration-200">
-              <n-button quaternary circle>
-                <template #icon>
-                  <n-icon>
-                    <PauseCircleOutline
-                      v-if="currentSong?.id == item.id && !isPaused"
-                    />
-                    <PlayCircleOutline v-else />
-                  </n-icon>
-                </template>
-              </n-button>
-              <n-button quaternary circle>
-                <template #icon>
-                  <n-icon><CloseCircleOutline /></n-icon>
-                </template>
-              </n-button>
-            </div>
-            <div class="">
-              {{ secondsToMinutesSeconds(item.duration) }}
-            </div>
-          </div>
-        </div>
-      </n-scrollbar>
-    </n-drawer-content>
-  </n-drawer>
+  <PlayList ref="playListRef" />
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
@@ -179,9 +121,9 @@ import {
   PlaySkipForwardSharp,
   SyncCircleOutline, // 循环
   ListCircleOutline, // 列表
-  CloseCircleOutline, //关闭
 } from '@vicons/ionicons5'
 import { secondsToMinutesSeconds } from '~/utils/format'
+import PlayList from './PlayList.vue'
 
 type SliderThemeOverrides = NonNullable<SliderProps['themeOverrides']>
 
@@ -189,13 +131,14 @@ const sliderThemeOverrides: SliderThemeOverrides = {
   handleSize: '15px',
 }
 
-const showList = ref(false)
-const handlerSetShowList = () => (showList.value = !showList.value)
+const playListRef = ref()
+
+const handlerSetShowList = () => playListRef.value?.handlerShowList()
 const appStore = useAppStore()
 const isMenuCollapsed = computed(() => appStore.isMenuCollapsed)
 
 const playerStore = usePlayerStore()
-const playlist = computed(() => playerStore.playlist)
+
 const isDragingProgress = computed(() => playerStore.isDragingProgress)
 const duration = computed(() => {
   if (!currentSong.value?.duration) return ['00:00', '00:00']
@@ -228,7 +171,7 @@ const style = computed(() => {
 
 const progress = computed({
   get: () => playerStore.progress,
-  set: value => {
+  set: (value) => {
     playerStore.setProgress(value)
   },
 })
@@ -251,14 +194,6 @@ const handlerDragend = () => playerStore.toggleIsDragingProgress(false)
 const handlerNextSong = () => playerStore.nextSong()
 const handlerPrevSong = () => playerStore.prevSong()
 
-const handlerPlayByIndex = (index: number) => {
-  const t = playlist.value[index]
-  if (t.id === currentSong.value?.id) {
-    playerStore.togglePlay()
-    return
-  }
-  playerStore.playSongAtIndex(index)
-}
 // const secondsToMinutesSeconds = (x: number) => secondsToMinutesSeconds(x)
 </script>
 
