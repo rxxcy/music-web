@@ -133,8 +133,9 @@ const handlePlay = async (song: MusicItem, quality: string) => {
   appStore.setIsLoading()
 }
 
-const handleTeleport = (id: number) => {
-  console.log('🚀 ~ handleTeleport ~ id:', id)
+const handleTeleport = (song: MusicItem) => {
+  const quality = `${song.quality[0].bitrate}${song.quality[0].format}`
+  console.log('🚀 ~ handleTeleport ~ quality:', quality)
 }
 
 const handleDownload = async (song: MusicItem, quality: string) => {

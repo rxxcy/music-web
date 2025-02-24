@@ -14,6 +14,6 @@ export interface MusicItem {
   album_pic: string
   url: string
   artist_pic?: string
-  quality: string
+  quality: any
   lyrics?: string
 }
