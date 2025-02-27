@@ -14,14 +14,14 @@
       </template>
     </n-image>
 
-    <!-- <h3 class="m-0 w-340px cursor-pointer" @click="handlePlay"> -->
-    <h3 class="m-0 cursor-pointer" @click="handlePlay">
+    <h3 class="m-0 w-340px cursor-pointer" @click="handlePlay">
+      <!-- <h3 class="m-0 cursor-pointer" @click="handlePlay"> -->
       <n-ellipsis>
         {{ song.name }}
       </n-ellipsis>
     </h3>
-    <!-- <n-ellipsis class="m-0 w-150px"> -->
-    <n-ellipsis class="m-0">
+    <n-ellipsis class="m-0 w-150px">
+      <!-- <n-ellipsis class="m-0"> -->
       {{ song.artist }}
     </n-ellipsis>
 
@@ -32,6 +32,9 @@
       justify="space-between"
       class="flex-1 flex-shrink-0"
     >
+      <n-button type="success" size="small" tertiary @click="handlePlay"
+        >试听
+      </n-button>
       <n-tooltip trigger="hover">
         <template #trigger>
           <n-button type="info" size="small" tertiary @click="handleTeleport">
@@ -40,9 +43,6 @@
         </template>
         默认顶级音质：{{ qualitys[0].format }} {{ qualitys[0].size }}
       </n-tooltip>
-      <n-button type="success" size="small" tertiary @click="handlePlay"
-        >试听
-      </n-button>
 
       <n-dropdown
         trigger="click"
@@ -95,7 +95,13 @@ const parseQuality = (str: string): { [key: string]: any }[] => {
   })
 }
 
-const handlePlay = () => emit('play', song.value, '128mp3')
+const handlePlay = () =>
+  emit(
+    'play',
+    song.value,
+    // downloadOptions.value[downloadOptions.value.length - 1].key
+    downloadOptions.value[0].key
+  )
 const handleTeleport = () =>
   emit('teleport', { ...song.value, quality: qualitys.value })
 const handleDownload = (e: string) => emit('download', song.value, e)

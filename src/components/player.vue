@@ -8,6 +8,8 @@
           :theme-overrides="sliderThemeOverrides"
           :on-dragstart="handlerDragstart"
           :on-dragend="handlerDragend"
+          :format-tooltip="formatTooltip"
+          @on-update:value="handlerUpdateProgress"
         />
       </div>
       <div class="flex h-full justify-between px-100px">
@@ -186,11 +188,29 @@ const loopMode = computed(() => {
   return maps[mode]
 })
 
+const formatTooltip = (value: number) => {
+  const duration = currentSong.value?.duration
+  if (!duration) return '00:00'
+  const n = Math.ceil((value / 100) * duration)
+  return secondsToMinutesSeconds(n)
+}
+
+const handlerUpdateProgress = (value: number) => {
+  console.log('🎉 -> handlerUpdateProgress -> value:', value)
+  // const duration = currentSong.value?.duration
+  // if (!duration) return
+  // const n = Math.ceil((value / 100) * duration)
+  // playerStore.setProgress(n)
+}
+
 const toggleLoopMode = () => playerStore.toggleLoopMode()
 const handlerPlayOrPause = () => playerStore.togglePlay()
 const handlerDragstart = () => playerStore.toggleIsDragingProgress(true)
-const handlerDragend = () => playerStore.toggleIsDragingProgress(false)
-
+const handlerDragend = () => {
+  const duration = currentSong.value?.duration
+  console.log('🎉 -> handlerDragend -> duration:', duration)
+  playerStore.toggleIsDragingProgress(false)
+}
 const handlerNextSong = () => playerStore.nextSong()
 const handlerPrevSong = () => playerStore.prevSong()
 

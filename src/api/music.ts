@@ -44,3 +44,8 @@ export const url = (params: UrlParams) => {
     params,
   })
 }
+
+export const teleport = () => {
+  return axios({
+  })   
+}
